@@ -2,13 +2,18 @@ import { a11yDevtoolsPlugin } from "@tanstack/devtools-a11y/react";
 import { TanStackDevtools } from "@tanstack/react-devtools";
 import type { QueryClient } from "@tanstack/react-query";
 import { ReactQueryDevtoolsPanel } from "@tanstack/react-query-devtools";
-import { createRootRouteWithContext, HeadContent, Scripts } from "@tanstack/react-router";
+import {
+  createRootRouteWithContext,
+  HeadContent,
+  ScriptOnce,
+  Scripts,
+} from "@tanstack/react-router";
 import { TanStackRouterDevtoolsPanel } from "@tanstack/react-router-devtools";
 import { createMiddleware } from "@tanstack/react-start";
 import { evlogErrorHandler } from "evlog/nitro/v3";
 
-import { ThemeProvider } from "#/components/theme-provider.tsx";
-import { Toaster } from "#/components/ui/toast.tsx";
+import { THEME_STORAGE_KEY } from "#/components/application/theme/theme-toggle";
+import { Toaster } from "#/components/base/toast/toast";
 
 import appCss from "#/styles.css?url";
 
@@ -47,18 +52,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
   shellComponent: RootDocument,
 });
 
+// Restores BoardUI's persisted theme before first paint so a dark session
+// never flashes light. BoardUI's ThemeToggle owns the key and the `.dark` class.
+const themeScript = `(function(){try{if(localStorage.getItem(${JSON.stringify(THEME_STORAGE_KEY)})==="dark"){document.documentElement.classList.add("dark")}}catch(e){}})();`;
+
 function RootDocument({ children }: { readonly children: React.ReactNode }) {
   return (
-    // suppress since we're updating the "dark" class in ThemeProvider
+    // suppress since the theme script toggles the "dark" class before hydration
     <html lang="en" suppressHydrationWarning>
       <head>
         <HeadContent />
       </head>
       <body>
-        <ThemeProvider>
-          {children}
-          <Toaster />
-        </ThemeProvider>
+        <ScriptOnce>{themeScript}</ScriptOnce>
+        {children}
+        <Toaster />
 
         <TanStackDevtools
           plugins={[

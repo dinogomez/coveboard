@@ -12,7 +12,7 @@ pnpm create cove
 ```
 
 - [React](https://react.dev) + TanStack [Start](https://tanstack.com/start/latest) + [Router](https://tanstack.com/router/latest) + [Query](https://tanstack.com/query/latest)
-- [Tailwind CSS](https://tailwindcss.com/) + [shadcn/ui](https://ui.shadcn.com/) + [Base UI](https://base-ui.com/) (base-rhea, [`--preset b1au68YWO`](https://ui.shadcn.com/create?preset=b1au68YWO&base=base&template=start&pointer=true))
+- [Tailwind CSS](https://tailwindcss.com/) + [BoardUI](https://www.boardui.com/) (source-owned components on [React Aria](https://react-spectrum.adobe.com/react-aria/))
 - [Drizzle ORM](https://orm.drizzle.team/) + PostgreSQL
 - [Better Auth](https://better-auth.com/)
 - [Vite Plus](https://viteplus.dev/) + [Nitro](https://nitro.build/)
@@ -95,7 +95,7 @@ Check [package.json](./package.json) for the full list of available scripts.
 
 - **`auth:generate`** - Regenerate the [auth db schema](./src/lib/db/schema/auth.schema.ts) if you've made changes to your Better Auth [config](./src/lib/auth/auth.ts).
 - **`db`** - Run [drizzle-kit](https://orm.drizzle.team/docs/kit-overview) commands. (e.g. `vpr db generate`, `vpr db studio`)
-- **`ui`** - The shadcn/ui CLI. (e.g. `vpr ui add button`)
+- **`ui`** - The BoardUI CLI. (e.g. `vpr ui add button`, `vpr ui list`)
 - **`format`**, **`lint`** - Run Oxfmt and Oxlint, or both via `vpr check`.
 - **`deps`** - Selectively upgrade dependencies via taze.
 
@@ -116,11 +116,22 @@ The [testing foundation](./.agents/testing.md) uses Vitest and Playwright and is
 
 Code in this template is public domain via [Unlicense](./LICENSE). Feel free to remove or replace for your own project.
 
+## AI chat screens
+
+The protected `/app` area is built from two BoardUI Pro templates:
+
+- `/app` - [AI Chat](https://www.boardui.com/components/ai-chat), the coding-agent workspace (`src/components/application/ai-chat/`).
+- `/app/agents` - [Multi-agent Chat](https://www.boardui.com/components/multi-agent-chat), wired to a model through the `$respondAsAgent` server function in [`src/lib/ai/functions.ts`](./src/lib/ai/functions.ts).
+
+Set `AI_API_KEY` (see [`.env.schema`](./.env.schema)) to get live replies; the provider is read off the key's prefix, and `AI_PROVIDER`, `AI_BASE_URL` and `CHAT_MODEL` cover everything else, including local OpenAI-compatible servers. Without a key the screens answer with their built-in sample replies. `POST /api/chat` ([`src/routes/api/chat.ts`](./src/routes/api/chat.ts)) exposes BoardUI's streaming `agent-runtime` contract for any further chat components you install.
+
+Pro components need an activated license on the machine running `vpr ui add`: `vpx boardui@latest login <key>`.
+
 ## Ecosystem
 
 - [@tanstack/intent](https://tanstack.com/intent/latest/docs/getting-started/quick-start-consumers) - Up-to-date skills for your AI agents, auto-synchronized from your installed dependencies.
 - [awesome-tanstack-start](https://github.com/Balastrong/awesome-tanstack-start) - A curated list of awesome resources for TanStack Start.
-- [shadcn/ui Directory](https://ui.shadcn.com/docs/directory), [shoogle.dev](https://shoogle.dev/) - Component directories & registries for shadcn/ui.
+- [BoardUI Components](https://www.boardui.com/components) - The full BoardUI component catalog, installable via `vpr ui add <name>`.
 
 ## Related templates
 

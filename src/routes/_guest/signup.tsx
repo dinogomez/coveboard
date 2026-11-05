@@ -1,18 +1,21 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { LoaderCircleIcon } from "lucide-react";
 
+import { Button } from "#/components/base/buttons/button";
+import { Input, type InputProps } from "#/components/base/input/input";
+import { Spinner } from "#/components/base/spinner/spinner";
+import { toast } from "#/components/base/toast/toast";
 import { SocialSignInButtons } from "#/components/sign-in-social-buttons.tsx";
-import { Button } from "#/components/ui/button.tsx";
-import { Input } from "#/components/ui/input.tsx";
-import { Label } from "#/components/ui/label.tsx";
-import { toast } from "#/components/ui/toast.tsx";
 import { authClient } from "#/lib/auth/auth-client.ts";
 import { authQueryOptions } from "#/lib/auth/queries.ts";
 
 export const Route = createFileRoute("/_guest/signup")({
   component: SignupForm,
 });
+
+// Surface the browser's native validation message under the field.
+const nativeErrorMessage: InputProps["errorMessage"] = ({ validationErrors }) =>
+  validationErrors.join(" ");
 
 function SignupForm() {
   const { redirectUrl } = Route.useRouteContext();
@@ -28,9 +31,8 @@ function SignupForm() {
         },
         {
           onError: ({ error }) => {
-            toast.add({
-              type: "error",
-              description: error.message || "An error occurred while signing up.",
+            toast.error("Could not create your account.", {
+              description: error.message || "Check your details and try again.",
             });
           },
           onSuccess: () => {
@@ -65,7 +67,9 @@ function SignupForm() {
       return;
 
     if (password !== confirmPassword) {
-      toast.add({ type: "error", description: "Passwords do not match." });
+      toast.error("Passwords do not match.", {
+        description: "Re-enter the same password in both fields.",
+      });
       return;
     }
 
@@ -76,62 +80,56 @@ function SignupForm() {
     <div className="flex flex-col gap-6">
       <div className="space-y-2 text-center">
         <h1 className="text-2xl font-bold tracking-tight">Create your account</h1>
-        <p className="text-sm text-muted-foreground">Start with a few basic details.</p>
+        <p className="text-sm text-text-secondary">Start with a few basic details.</p>
       </div>
       <form onSubmit={handleSubmit} aria-busy={isPending}>
         <div className="flex flex-col gap-6">
           <div className="flex flex-col gap-5">
-            <div className="grid gap-2">
-              <Label htmlFor="name">Name</Label>
-              <Input
-                id="name"
-                name="name"
-                type="text"
-                placeholder="John Doe"
-                autoComplete="name"
-                readOnly={isPending}
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="hello@example.com"
-                autoComplete="email"
-                readOnly={isPending}
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Create a password"
-                autoComplete="new-password"
-                readOnly={isPending}
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="confirm_password">Confirm Password</Label>
-              <Input
-                id="confirm_password"
-                name="confirm_password"
-                type="password"
-                placeholder="Repeat your password"
-                autoComplete="new-password"
-                readOnly={isPending}
-                required
-              />
-            </div>
-            <Button type="submit" className="mt-2 w-full" size="lg" disabled={isPending}>
-              {isPending && <LoaderCircleIcon className="animate-spin" aria-hidden="true" />}
-              {isPending ? "Signing up..." : "Sign up"}
+            <Input
+              label="Name"
+              name="name"
+              type="text"
+              placeholder="John Doe"
+              autoComplete="name"
+              isReadOnly={isPending}
+              isRequired
+              errorMessage={nativeErrorMessage}
+            />
+            <Input
+              label="Email"
+              name="email"
+              type="email"
+              placeholder="hello@example.com"
+              autoComplete="email"
+              isReadOnly={isPending}
+              isRequired
+              errorMessage={nativeErrorMessage}
+            />
+            <Input
+              label="Password"
+              name="password"
+              type="password"
+              placeholder="Create a password"
+              autoComplete="new-password"
+              isReadOnly={isPending}
+              isRequired
+              errorMessage={nativeErrorMessage}
+            />
+            <Input
+              label="Confirm Password"
+              name="confirm_password"
+              type="password"
+              placeholder="Repeat your password"
+              autoComplete="new-password"
+              isReadOnly={isPending}
+              isRequired
+              errorMessage={nativeErrorMessage}
+            />
+            <Button type="submit" className="mt-2 w-full" disabled={isPending}>
+              <span className="flex items-center gap-1.5">
+                {isPending && <Spinner size="sm" className="text-current" aria-hidden />}
+                {isPending ? "Signing up..." : "Sign up"}
+              </span>
             </Button>
           </div>
           <SocialSignInButtons callbackURL={redirectUrl} disabled={isPending} />

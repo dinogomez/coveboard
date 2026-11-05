@@ -1,6 +1,5 @@
-import { Link } from "@tanstack/react-router";
-
-import { Button } from "./ui/button";
+import { Button } from "#/components/base/buttons/button";
+import { ButtonLink } from "#/components/button-link.tsx";
 
 export function DefaultNotFound() {
   return (
@@ -10,9 +9,9 @@ export function DefaultNotFound() {
         <Button type="button" onClick={() => window.history.back()}>
           Go back
         </Button>
-        <Button render={<Link to="/" />} variant="secondary" nativeButton={false}>
+        <ButtonLink to="/" variant="secondary">
           Home
-        </Button>
+        </ButtonLink>
       </p>
     </div>
   );

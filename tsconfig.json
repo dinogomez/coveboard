@@ -14,6 +14,11 @@
     "allowJs": true,
     "forceConsistentCasingInFileNames": true,
     "resolvePackageJsonImports": true,
+    // Mirrors the `#/*` subpath import in package.json so extensionless
+    // imports (as written by the BoardUI CLI) also type-check.
+    "paths": {
+      "#/*": ["./src/*"]
+    },
     "allowImportingTsExtensions": true,
     "noEmit": true,
     "strictNullChecks": true,
