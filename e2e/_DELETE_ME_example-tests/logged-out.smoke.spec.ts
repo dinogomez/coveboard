@@ -22,7 +22,7 @@ test("a logged-out visitor can reach the login form", async ({ page }) => {
   await page.getByText("Just created a project from this stack?").click();
   await expect(page.getByText(/The Playwright config needs no change/)).toBeVisible();
 
-  await page.getByRole("button", { name: "Log in" }).click();
+  await page.getByRole("link", { name: "Log in" }).click();
 
   await expect(page).toHaveURL(/\/login$/);
   await expect(page.getByRole("heading", { name: /welcome back/i })).toBeVisible();

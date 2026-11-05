@@ -1,7 +1,7 @@
 import { useQueryClient } from "@tanstack/react-query";
 import { useRouter } from "@tanstack/react-router";
 
-import { Button } from "#/components/ui/button.tsx";
+import { Button } from "#/components/base/buttons/button";
 import { authClient } from "#/lib/auth/auth-client.ts";
 import { authQueryOptions } from "#/lib/auth/queries.ts";
 
@@ -23,8 +23,7 @@ export function SignOutButton() {
       }}
       type="button"
       className="w-fit"
-      variant="destructive"
-      size="lg"
+      variant="danger"
     >
       Sign out
     </Button>

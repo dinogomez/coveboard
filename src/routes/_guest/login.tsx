@@ -1,18 +1,21 @@
 import { useMutation } from "@tanstack/react-query";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { LoaderCircleIcon } from "lucide-react";
 import { ENV } from "varlock/env";
 
+import { Button } from "#/components/base/buttons/button";
+import { Input, type InputProps } from "#/components/base/input/input";
+import { Spinner } from "#/components/base/spinner/spinner";
+import { toast } from "#/components/base/toast/toast";
 import { SocialSignInButtons } from "#/components/sign-in-social-buttons.tsx";
-import { Button } from "#/components/ui/button.tsx";
-import { Input } from "#/components/ui/input.tsx";
-import { Label } from "#/components/ui/label.tsx";
-import { toast } from "#/components/ui/toast.tsx";
 import { authClient } from "#/lib/auth/auth-client.ts";
 
 export const Route = createFileRoute("/_guest/login")({
   component: LoginForm,
 });
+
+// Surface the browser's native validation message under the field.
+const nativeErrorMessage: InputProps["errorMessage"] = ({ validationErrors }) =>
+  validationErrors.join(" ");
 
 function LoginForm() {
   const { redirectUrl } = Route.useRouteContext();
@@ -26,9 +29,8 @@ function LoginForm() {
         },
         {
           onError: ({ error }) => {
-            toast.add({
-              type: "error",
-              description: error.message || "An error occurred while signing in.",
+            toast.error("Could not log you in.", {
+              description: error.message || "Check your details and try again.",
             });
           },
           // better-auth seems to trigger a hard navigation on login,
@@ -58,39 +60,37 @@ function LoginForm() {
     <div className="flex flex-col gap-6">
       <div className="space-y-2 text-center">
         <h1 className="text-2xl font-bold tracking-tight">Welcome back</h1>
-        <p className="text-sm text-muted-foreground">Enter your details to access your account.</p>
+        <p className="text-sm text-text-secondary">Enter your details to access your account.</p>
       </div>
       <form onSubmit={handleSubmit} aria-busy={isPending}>
         <div className="flex flex-col gap-6">
           <DeleteMeDemoAccount />
           <div className="flex flex-col gap-5">
-            <div className="grid gap-2">
-              <Label htmlFor="email">Email</Label>
-              <Input
-                id="email"
-                name="email"
-                type="email"
-                placeholder="hello@example.com"
-                autoComplete="email"
-                readOnly={isPending}
-                required
-              />
-            </div>
-            <div className="grid gap-2">
-              <Label htmlFor="password">Password</Label>
-              <Input
-                id="password"
-                name="password"
-                type="password"
-                placeholder="Enter your password"
-                autoComplete="current-password"
-                readOnly={isPending}
-                required
-              />
-            </div>
-            <Button type="submit" className="mt-2 w-full" size="lg" disabled={isPending}>
-              {isPending && <LoaderCircleIcon className="animate-spin" aria-hidden="true" />}
-              {isPending ? "Logging in..." : "Log in"}
+            <Input
+              label="Email"
+              name="email"
+              type="email"
+              placeholder="hello@example.com"
+              autoComplete="email"
+              isReadOnly={isPending}
+              isRequired
+              errorMessage={nativeErrorMessage}
+            />
+            <Input
+              label="Password"
+              name="password"
+              type="password"
+              placeholder="Enter your password"
+              autoComplete="current-password"
+              isReadOnly={isPending}
+              isRequired
+              errorMessage={nativeErrorMessage}
+            />
+            <Button type="submit" className="mt-2 w-full" disabled={isPending}>
+              <span className="flex items-center gap-1.5">
+                {isPending && <Spinner size="sm" className="text-current" aria-hidden />}
+                {isPending ? "Logging in..." : "Log in"}
+              </span>
             </Button>
           </div>
           <SocialSignInButtons callbackURL={redirectUrl} disabled={isPending} />
@@ -115,14 +115,14 @@ function DeleteMeDemoAccount() {
   if (new URL(ENV.VITE_BASE_URL).origin !== "https://cove.mugnavo.com") return null;
 
   return (
-    <div className="rounded-md border border-dashed bg-muted/50 p-3 text-sm">
-      <p className="text-xs text-muted-foreground">Demo account credentials</p>
+    <div className="rounded-md border border-dashed border-border-button-default bg-background-secondary-default/50 p-3 text-sm">
+      <p className="text-xs text-text-secondary">Demo account credentials</p>
       <dl className="mt-3 grid grid-cols-[auto_1fr] gap-x-3 gap-y-1">
-        <dt className="text-muted-foreground">Email</dt>
+        <dt className="text-text-secondary">Email</dt>
         <dd>
           <code className="select-all">demo@mugnavo.com</code>
         </dd>
-        <dt className="text-muted-foreground">Password</dt>
+        <dt className="text-text-secondary">Password</dt>
         <dd>
           <code className="select-all">demo1234</code>
         </dd>

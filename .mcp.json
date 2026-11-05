@@ -1,0 +1,8 @@
+{
+  "mcpServers": {
+    "boardui": {
+      "command": "npx",
+      "args": ["-y", "boardui@latest", "mcp"]
+    }
+  }
+}

@@ -33,7 +33,7 @@ export default defineConfig(({ mode }) => ({
     sortTailwindcss: {
       stylesheet: "./src/styles.css",
       attributes: ["class", "className"],
-      functions: ["clsx", "cn", "cva", "tw"],
+      functions: ["cx", "sortCx", "tw"],
     },
     sortPackageJson: true,
     ignorePatterns: [

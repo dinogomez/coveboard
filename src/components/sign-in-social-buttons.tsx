@@ -1,23 +1,18 @@
-import { SiGithub, SiGoogle } from "@icons-pack/react-simple-icons";
 import { useMutation } from "@tanstack/react-query";
 import { ENV } from "varlock/env";
 
-import { Button } from "#/components/ui/button.tsx";
-import { toast } from "#/components/ui/toast.tsx";
+import { SOCIAL_PROVIDERS, SocialButton } from "#/components/base/social-button/social-button";
+import { toast } from "#/components/base/toast/toast";
 import { authClient } from "#/lib/auth/auth-client.ts";
 
 interface SocialLoginButtonProps {
-  provider: string;
-  icon: React.ReactNode;
+  provider: "github" | "google";
   disabled?: boolean;
   callbackURL: string;
 }
 
 function SignInSocialButton(props: SocialLoginButtonProps) {
-  const providerLabel =
-    props.provider === "github"
-      ? "GitHub"
-      : props.provider.charAt(0).toUpperCase() + props.provider.slice(1);
+  const providerLabel = SOCIAL_PROVIDERS[props.provider].label;
 
   const mutation = useMutation({
     mutationFn: async () =>
@@ -28,9 +23,8 @@ function SignInSocialButton(props: SocialLoginButtonProps) {
         },
         {
           onError: ({ error }) => {
-            toast.add({
-              type: "error",
-              description: error.message || `An error occurred during ${providerLabel} sign-in.`,
+            toast.error(`Could not continue with ${providerLabel}.`, {
+              description: error.message || "Please try again.",
             });
           },
         },
@@ -38,17 +32,13 @@ function SignInSocialButton(props: SocialLoginButtonProps) {
   });
 
   return (
-    <Button
-      variant="outline"
-      className="w-full"
-      size="lg"
-      type="button"
+    <SocialButton
+      brand={props.provider}
+      appearance="white"
+      fullWidth
       disabled={mutation.isSuccess || mutation.isPending || props.disabled}
       onClick={() => mutation.mutate()}
-    >
-      {props.icon}
-      Continue with {providerLabel}
-    </Button>
+    />
   );
 }
 
@@ -61,21 +51,15 @@ export function SocialSignInButtons({
 
   return (
     <>
-      <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:border-t after:border-border">
-        <span className="relative z-10 bg-background px-2 text-muted-foreground">Or</span>
+      <div className="relative text-center text-sm after:absolute after:inset-0 after:top-1/2 after:z-0 after:border-t after:border-separator-border">
+        <span className="relative z-10 bg-background-full px-2 text-text-secondary">Or</span>
       </div>
-      <div className="grid gap-3 sm:grid-cols-2">
-        <SignInSocialButton
-          provider="github"
-          callbackURL={callbackURL}
-          disabled={disabled}
-          icon={<SiGithub className="size-4" />}
-        />
+      <div className="grid gap-3">
+        <SignInSocialButton provider="github" callbackURL={callbackURL} disabled={disabled} />
         <SignInSocialButton
           provider="google"
           callbackURL={callbackURL}
           disabled={disabled || isPreviewDeployment}
-          icon={<SiGoogle className="size-4" />}
         />
       </div>
     </>

@@ -1,6 +1,5 @@
 import { SiGithub } from "@icons-pack/react-simple-icons";
 import { useQuery } from "@tanstack/react-query";
-import { Link } from "@tanstack/react-router";
 import {
   CheckIcon,
   ChevronDownIcon,
@@ -12,10 +11,11 @@ import {
 import { Suspense } from "react";
 import { useState } from "react";
 
+import { ThemeToggle } from "#/components/application/theme/theme-toggle";
+import { ButtonLink as AnchorButtonLink } from "#/components/base/buttons/button";
+import { toast } from "#/components/base/toast/toast";
+import { ButtonLink } from "#/components/button-link.tsx";
 import { SignOutButton } from "#/components/sign-out-button.tsx";
-import { ThemeToggle } from "#/components/theme-toggle.tsx";
-import { Button } from "#/components/ui/button.tsx";
-import { toast } from "#/components/ui/toast.tsx";
 import { useAuthSuspense } from "#/lib/auth/hooks.ts";
 
 import { formatGitHubStars } from "./format-github-stars";
@@ -35,12 +35,12 @@ export function IntroPage() {
     try {
       await navigator.clipboard.writeText(cloneCommand);
       setIsCopied(true);
-      toast.add({ type: "success", description: "Command copied to clipboard." });
+      toast.success("Command copied to clipboard.");
       setTimeout(() => {
         setIsCopied(false);
       }, 4000);
     } catch {
-      toast.add({ type: "error", description: "Failed to copy command." });
+      toast.error("Could not copy the command.");
     }
   };
 
@@ -54,16 +54,16 @@ export function IntroPage() {
               alt="Mugnavo logo"
               className="size-5"
             />
-            <span className="text-lg font-semibold tracking-tight text-foreground">cove</span>
+            <span className="text-lg font-semibold tracking-tight text-text-primary">cove</span>
           </a>
           <div className="flex items-center gap-2">
             <RepoStarsBadge href={repoUrl} fallbackStarsCount={fallbackStarsCount} />
-            <ThemeToggle />
+            <ThemeToggle appearance="segmented" size="small" />
           </div>
         </header>
 
         <main>
-          <section className="relative isolate mt-6 mb-24 overflow-hidden rounded-[2rem] border border-border bg-card px-6 py-14 shadow-[0_32px_100px_-64px_rgba(0,0,0,0.55)] sm:px-10 md:mt-8 md:px-14 md:py-20">
+          <section className="relative isolate mt-6 mb-24 overflow-hidden rounded-[2rem] border border-border-button-default bg-background-primary-default px-6 py-14 shadow-[0_32px_100px_-64px_rgba(0,0,0,0.55)] sm:px-10 md:mt-8 md:px-14 md:py-20">
             <div
               aria-hidden="true"
               className="absolute top-10 right-10 size-2 rounded-full bg-yellow-400 shadow-[0_0_32px_12px_rgba(250,204,21,0.2)] dark:bg-yellow-200"
@@ -86,7 +86,7 @@ export function IntroPage() {
                 href="https://github.com/mugnavo/cove/issues/96"
                 target="_blank"
                 rel="noopener noreferrer"
-                className="mb-5 inline-flex items-center gap-1.5 rounded-full border border-yellow-500/30 bg-yellow-500/10 px-3 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-yellow-500/15 md:text-sm dark:border-yellow-200/20 dark:bg-yellow-200/10 dark:hover:bg-yellow-200/15"
+                className="mb-5 inline-flex items-center gap-1.5 rounded-full border border-yellow-500/30 bg-yellow-500/10 px-3 py-1.5 text-xs font-medium text-text-primary transition-colors hover:bg-yellow-500/15 md:text-sm dark:border-yellow-200/20 dark:bg-yellow-200/10 dark:hover:bg-yellow-200/15"
               >
                 TanStarter is now Cove Stack.
                 <ExternalLinkIcon aria-hidden="true" className="size-3 md:size-3.5" />
@@ -95,17 +95,17 @@ export function IntroPage() {
                 A <span className="text-yellow-500 dark:text-yellow-200">minimal</span> starter
                 stack for TanStack Start.
               </h1>
-              <p className="mt-6 max-w-xl text-lg leading-relaxed text-muted-foreground md:text-xl">
+              <p className="mt-6 max-w-xl text-lg leading-relaxed text-text-secondary md:text-xl">
                 The Cove Stack brings together the essentials for building type-safe web
                 applications without the extra boilerplate.
               </p>
 
-              <div className="mt-9 max-w-xl rounded-xl border border-border/80 bg-background/80 p-1 shadow-lg backdrop-blur-sm">
-                <div className="group flex items-center justify-between rounded-lg border border-border bg-card/90 p-4">
+              <div className="border-border-button-default-button-default/80 mt-9 max-w-xl rounded-xl border bg-background-full/80 p-1 shadow-lg backdrop-blur-sm">
+                <div className="group flex items-center justify-between rounded-lg border border-border-button-default bg-background-primary-default/90 p-4">
                   <div className="flex items-center gap-3 overflow-hidden">
-                    <TerminalIcon className="hidden size-4 shrink-0 text-muted-foreground/70 sm:inline" />
+                    <TerminalIcon className="hidden size-4 shrink-0 text-text-tertiary sm:inline" />
                     <code className="overflow-hidden font-mono text-sm text-ellipsis whitespace-nowrap md:text-base">
-                      <span className="mr-2 hidden text-muted-foreground/70 select-none sm:inline">
+                      <span className="mr-2 hidden text-text-tertiary select-none sm:inline">
                         $
                       </span>
                       <span className="select-all">{cloneCommand}</span>
@@ -113,7 +113,7 @@ export function IntroPage() {
                   </div>
                   <button
                     onClick={copyToClipboard}
-                    className="ml-4 shrink-0 rounded-md p-2 text-muted-foreground transition-colors hover:bg-accent hover:text-accent-foreground"
+                    className="ml-4 shrink-0 rounded-md p-2 text-text-secondary transition-colors hover:bg-background-secondary-hover hover:text-text-primary"
                     title="Copy command"
                     aria-label="Copy command"
                   >
@@ -125,18 +125,18 @@ export function IntroPage() {
           </section>
 
           <section className="mb-20">
-            <h2 className="mb-6 text-2xl font-bold tracking-tight text-foreground sm:text-3xl">
+            <h2 className="mb-6 text-2xl font-bold tracking-tight text-text-primary sm:text-3xl">
               A <span className="text-yellow-500 dark:text-yellow-200">calm</span> foundation to
               build on.
             </h2>
-            <div className="grid grid-cols-1 gap-x-12 gap-y-8 rounded-2xl border border-border bg-card/50 p-6 sm:p-8 md:grid-cols-2">
+            <div className="grid grid-cols-1 gap-x-12 gap-y-8 rounded-2xl border border-border-button-default bg-background-primary-default/50 p-6 sm:p-8 md:grid-cols-2">
               <Feature
                 title="Full-Stack Core"
                 desc="Build on a modern full-stack framework with TanStack Start, Router, and Vite."
               />
               <Feature
                 title="Only the Essentials"
-                desc="Drizzle ORM, Better Auth, shadcn/ui. Less boilerplate that you'll end up deleting anyway."
+                desc="Drizzle ORM, Better Auth, BoardUI. Less boilerplate that you'll end up deleting anyway."
               />
               <Feature
                 title="End-to-end Type Safety"
@@ -181,7 +181,7 @@ export function IntroPage() {
             href={repoUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 font-medium text-muted-foreground transition-colors hover:text-foreground"
+            className="flex items-center gap-1 font-medium text-text-secondary transition-colors hover:text-text-primary"
           >
             <SiGithub className="size-4" />
             GitHub
@@ -190,7 +190,7 @@ export function IntroPage() {
             href="https://mugnavo.com"
             target="_blank"
             rel="noopener noreferrer"
-            className="flex items-center gap-1 underline decoration-border transition-all hover:decoration-foreground"
+            className="flex items-center gap-1 underline decoration-border-button-default transition-all hover:decoration-text-primary"
           >
             Mugnavo
             <ExternalLinkIcon className="size-4" />
@@ -204,8 +204,8 @@ export function IntroPage() {
 function Feature({ title, desc }: { title: string; desc: string }) {
   return (
     <div>
-      <h3 className="mb-2 font-semibold text-foreground">{title}</h3>
-      <p className="text-sm leading-relaxed text-muted-foreground">{desc}</p>
+      <h3 className="mb-2 font-semibold text-text-primary">{title}</h3>
+      <p className="text-sm leading-relaxed text-text-secondary">{desc}</p>
     </div>
   );
 }
@@ -216,36 +216,34 @@ function UserAction() {
   return user ? (
     <section className="mb-20 flex flex-col items-center space-y-1.5">
       <div className="mb-4 flex w-full items-center gap-2">
-        <div className="size-2 animate-pulse rounded-full bg-primary"></div>
-        <h2 className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
+        <div className="size-2 animate-pulse rounded-full bg-accent-600"></div>
+        <h2 className="text-[10px] font-bold tracking-widest text-text-secondary uppercase">
           Session
         </h2>
       </div>
       <div className="w-full">
-        <div className="overflow-hidden rounded-xl border border-border bg-card shadow-sm">
-          <div className="flex items-center justify-between border-b border-border bg-muted px-4 py-2.5">
+        <div className="overflow-hidden rounded-xl border border-border-button-default bg-background-primary-default shadow-sm">
+          <div className="flex items-center justify-between border-b border-border-button-default bg-background-secondary-default px-4 py-2.5">
             <div className="flex items-center gap-1.5">
-              <div className="size-2.5 rounded-full bg-border"></div>
-              <div className="size-2.5 rounded-full bg-border"></div>
-              <div className="size-2.5 rounded-full bg-border"></div>
-              <span className="ml-2 font-mono text-[10px] text-muted-foreground">
+              <div className="size-2.5 rounded-full bg-border-button-default"></div>
+              <div className="size-2.5 rounded-full bg-border-button-default"></div>
+              <div className="size-2.5 rounded-full bg-border-button-default"></div>
+              <span className="ml-2 font-mono text-[10px] text-text-secondary">
                 useAuthSuspense() data
               </span>
             </div>
-            <span className="font-mono text-[10px] text-muted-foreground/70 uppercase">
-              ReadOnly
-            </span>
+            <span className="font-mono text-[10px] text-text-tertiary uppercase">ReadOnly</span>
           </div>
           <div className="overflow-x-auto p-6">
-            <pre className="font-mono text-xs leading-relaxed text-foreground/80">
+            <pre className="font-mono text-xs leading-relaxed text-text-primary/80">
               {JSON.stringify(user, null, 2)}
             </pre>
           </div>
         </div>
-        <div className="-mt-px mr-4 ml-auto flex w-fit flex-wrap items-center justify-end gap-2 rounded-b-xl border border-t-0 border-border bg-muted/30 px-4 py-3 shadow-sm md:mr-8">
-          <Button render={<Link to="/app" />} className="w-fit" size="lg" nativeButton={false}>
+        <div className="-mt-px mr-4 ml-auto flex w-fit flex-wrap items-center justify-end gap-2 rounded-b-xl border border-t-0 border-border-button-default bg-background-secondary-default/30 px-4 py-3 shadow-sm md:mr-8">
+          <ButtonLink to="/app" className="w-fit">
             Go to /app
-          </Button>
+          </ButtonLink>
           <SignOutButton />
         </div>
       </div>
@@ -253,19 +251,19 @@ function UserAction() {
   ) : (
     <section className="mb-20">
       <div className="mb-4 flex w-full items-center gap-2">
-        <div className="size-2 rounded-full bg-muted-foreground/40"></div>
-        <h2 className="text-[10px] font-bold tracking-widest text-muted-foreground uppercase">
+        <div className="size-2 rounded-full bg-background-quaternary-default"></div>
+        <h2 className="text-[10px] font-bold tracking-widest text-text-secondary uppercase">
           Session
         </h2>
       </div>
-      <div className="flex flex-col items-center rounded-2xl border border-border bg-card/50 px-6 py-8 text-center sm:px-10">
-        <h3 className="text-lg font-semibold text-foreground">You are not signed in.</h3>
-        <p className="mt-2 max-w-90 text-sm leading-relaxed text-muted-foreground">
+      <div className="flex flex-col items-center rounded-2xl border border-border-button-default bg-background-primary-default/50 px-6 py-8 text-center sm:px-10">
+        <h3 className="text-lg font-semibold text-text-primary">You are not signed in.</h3>
+        <p className="mt-2 max-w-90 text-sm leading-relaxed text-text-secondary">
           Nothing fancy. Just a quick demo of protected routes and the auth utilities in action.
         </p>
-        <Button render={<Link to="/login" />} className="mt-6 w-fit" size="lg" nativeButton={false}>
+        <ButtonLink to="/login" className="mt-6 w-fit">
           Log in
-        </Button>
+        </ButtonLink>
       </div>
     </section>
   );
@@ -273,44 +271,44 @@ function UserAction() {
 
 function TemplateSetupGuide() {
   return (
-    <details className="group mx-auto mb-16 max-w-[65ch] overflow-hidden rounded-xl border border-border bg-card/50 text-sm text-foreground/80">
+    <details className="group mx-auto mb-16 max-w-[65ch] overflow-hidden rounded-xl border border-border-button-default bg-background-primary-default/50 text-sm text-text-primary/80">
       <summary className="flex cursor-pointer list-none items-center justify-between gap-4 p-4 select-none [&::-webkit-details-marker]:hidden">
         <span>
-          <span className="block font-medium text-foreground">
+          <span className="block font-medium text-text-primary">
             Just created a project from this stack?
           </span>
-          <span className="mt-1 block text-muted-foreground">
+          <span className="mt-1 block text-text-secondary">
             Expand for the starter cleanup checklist.
           </span>
         </span>
-        <ChevronDownIcon className="size-4 shrink-0 text-muted-foreground transition-transform group-open:rotate-180" />
+        <ChevronDownIcon className="size-4 shrink-0 text-text-secondary transition-transform group-open:rotate-180" />
       </summary>
 
-      <div className="border-t border-border px-4 py-4">
+      <div className="border-t border-border-button-default px-4 py-4">
         <ol className="list-decimal space-y-3 pl-5">
           <li>
             Delete{" "}
-            <code className="rounded-md border border-border bg-card px-1 py-0.5">
+            <code className="rounded-md border border-border-button-default bg-background-primary-default px-1 py-0.5">
               src/components/_DELETE_ME_intro-page/
             </code>
             , which contains this page, its helper, and the example unit test.
           </li>
           <li>
             Delete{" "}
-            <code className="rounded-md border border-border bg-card px-1 py-0.5">
+            <code className="rounded-md border border-border-button-default bg-background-primary-default px-1 py-0.5">
               e2e/_DELETE_ME_example-tests/
             </code>
             . The Playwright config needs no change.
           </li>
           <li>
             Replace the starter homepage in{" "}
-            <code className="rounded-md border border-border bg-card px-1 py-0.5">
+            <code className="rounded-md border border-border-button-default bg-background-primary-default px-1 py-0.5">
               src/routes/index.tsx
             </code>
             .
           </li>
         </ol>
-        <p className="mt-4 text-muted-foreground">
+        <p className="mt-4 text-text-secondary">
           The testing setup is intentionally lightweight. For short-lived prototypes, it can be
           safely ignored or removed.
         </p>
@@ -339,29 +337,27 @@ function RepoStarsBadge({
   const starsLabel = `${count.toLocaleString()}${data ? "" : "+"} stars on GitHub`;
 
   return (
-    <Button
-      render={
-        <a
-          href={href}
-          target="_blank"
-          rel="noopener noreferrer"
-          aria-label={starsLabel}
-          title={starsLabel}
-        />
-      }
-      nativeButton={false}
+    <AnchorButtonLink
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      aria-label={starsLabel}
+      title={starsLabel}
       variant="secondary"
+      size="small"
+      leadingIcon={SiGithub}
       className="tracking-wide"
     >
-      <SiGithub className="size-4" />
-      {formattedStarsCount}
-      {data ? "" : "+"}
-      <StarIcon
-        fill="currentColor"
-        strokeWidth={0}
-        className="size-4 text-yellow-500 dark:text-yellow-300"
-      />
-    </Button>
+      <span className="flex items-center gap-1">
+        {formattedStarsCount}
+        {data ? "" : "+"}
+        <StarIcon
+          fill="currentColor"
+          strokeWidth={0}
+          className="size-4 text-yellow-500 dark:text-yellow-300"
+        />
+      </span>
+    </AnchorButtonLink>
   );
 }
 
@@ -422,14 +418,14 @@ const UI_BADGES: TechBadge[] = [
     src: "https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmugnavo%2Fcove%2Fmain%2Fpackage.json&query=%24.devDependencies.tailwindcss&label=tailwindcss&style=flat-square",
   },
   {
-    alt: "shadcn/ui version",
-    href: "https://ui.shadcn.com/",
-    src: "https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmugnavo%2Fcove%2Fmain%2Fpackage.json&query=%24.dependencies.shadcn&label=shadcn%2Fui&style=flat-square",
+    alt: "BoardUI",
+    href: "https://www.boardui.com/",
+    src: "https://img.shields.io/badge/boardui-react_aria-0a0a0a?style=flat-square",
   },
   {
-    alt: "Base UI version",
-    href: "https://base-ui.com/",
-    src: "https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fmugnavo%2Fcove%2Fmain%2Fpackage.json&query=%24.dependencies%5B%22%40base-ui%2Freact%22%5D&label=base-ui&style=flat-square",
+    alt: "React Aria Components version",
+    href: "https://react-spectrum.adobe.com/react-aria/",
+    src: "https://img.shields.io/badge/dynamic/json?url=https%3A%2F%2Fraw.githubusercontent.com%2Fdinogomez%2Fcoveboard%2Fmain%2Fpackage.json&query=%24.dependencies%5B%22react-aria-components%22%5D&label=react-aria-components&style=flat-square",
   },
 ];
 
